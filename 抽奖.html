@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background-color: rgb(254, 230, 182);
+        }
+        .classes {
+            font-size: 25pt;
+            margin-bottom: 2rem;
+        }
+        .lottery {
+            flex: auto;
+            background-color: rgb(220, 23, 52);
+            width: 30%;
+            text-align: center;
+            border: 1px solid #000;
+            border-radius: 0.5em;
+            padding: 2rem;
+            font-size: 25pt;
+            margin: 0 auto;
+        }
+        .draw {
+            font-size: 20pt;
+            text-align: center;
+            width: 15%;
+            padding: 0.8em;
+            margin-top: 1em;
+        }
+        #app {
+            text-align: center;   
+            display: block;
+            z-index: 1000;
+            /* margin-top: 10em; */
+            margin-top: 10%;
+        }
+    </style>
+    <title>Document</title>
+</head>
+<body>
+    <div style="width: 100%; position: absolute; top: 0; z-index: -1;">
+        <img src="./assets/l1.png" style="width: 36%; vertical-align: top;">
+        <img src="./assets/u1.png" style="width: 34%; vertical-align: top;">
+        <img src="./assets/r1.png" style="width: 25%; vertical-align: top;">
+    </div>
+    <div id="app">
+        <select class="classes" name="等级">
+            <option value="zeroth">特等奖</option>
+            <option value="first">一等奖</option>
+            <option value="second">二等奖</option>
+            <option value="third">三等奖</option>
+            <option value="forth">四等奖</option>
+        </select>
+        <div class="lottery">
+            <span>中奖人：</span>   
+            <span>{{ name }}</span>
+        </div>
+        <button class="draw" @click="feelLucky">
+            {{state}}
+        </button>
+    </div>
+    <div>
+        <img src="./assets/d.png" style="width: 100%; position: absolute; bottom: 0; z-index: -1;">
+    </div>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.3.4/vue.global.min.js"></script>
+    <script>
+        const {createApp, ref} = Vue
+        createApp({
+            data() {
+                return {
+                    list: [
+                        "testusername1",
+                        "testusername2",
+                        "testusername3",
+                        "testusername4",
+                        "testusername5",
+                        "testusername6",
+                    ],
+                    name: "中奖者",
+                    state: "开始抽奖",
+                    intervalId:null,
+                    idx:0
+                }
+            },
+            methods: {
+                feelLucky() {
+                    if (this.state == "开始抽奖") {
+                        this.state = "停止滚动"
+                        this.intervalId = setInterval(() => {
+                            this.idx = Math.floor(Math.random() * this.list.length)
+                            this.name = this.list[this.idx];
+                        }, 10);
+                    }else{
+                        if (this.state == '停止滚动') {
+                            this.state = "开始抽奖"
+                            this.list.splice(this.idx, 1)
+                            clearInterval(this.intervalId);
+                            this.intervalId = null;
+                        }
+                    }
+                    if (this.list.length == 0) {
+                        this.name = "结束哩"
+                        return
+                    }
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+</html>
